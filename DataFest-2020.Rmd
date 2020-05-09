@@ -1,0 +1,36 @@
+---
+title: "DataFest-2020"
+author: "Nikhil Sharma, Kevin Chen, Konner Macias, Raghava Govil"
+date: "5/9/2020"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+```
+
+```{r}
+library(haven)
+first <- read_sav("Pathways Mar 2020 (ATP W63.5).sav")
+second <- read_sav("ATP W64.sav")
+```
+
+```{r}
+colnames(first)
+```
+
+```{r}
+colnames(second)
+```
+
+```{r}
+first <- first[, -c(1:3,15,25:28,34,48:59)]
+first <- first[, -c(21:25)]
+colnames(first)
+```
+
+```{r}
+second <- second[, c(15:37,52:61,64:96)]
+colnames(second)
+```
+
