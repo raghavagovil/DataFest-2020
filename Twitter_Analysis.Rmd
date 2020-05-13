@@ -1,0 +1,72 @@
+---
+title: "DataFest - Twitter Analysis"
+author: "Raghava Govil"
+date: "5/10/2020"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+```
+
+```{r}
+# reading the data 
+library(readr)
+frequent_terms <- read_csv("frequent_terms.csv")
+frequent_bigrams <- read_csv("frequent_bigrams.csv")
+frequent_trigrams <- read_csv("frequent_trigrams.csv")
+statistics <- read_delim("statistics-full_dataset.tsv", "\t", escape_double = FALSE, trim_ws = TRUE)
+```
+
+```{r}
+# plot to depict number of tweets over time
+options(scipen = 999)
+library(ggplot2)
+ggplot(statistics, aes(x = date, y = tweet_id)) +
+  geom_line() +
+  xlab("Date") +
+  ylab("Number of Tweets") +
+  ggtitle("Number of COVID-19 Tweets Over Time") +
+  theme_bw()
+```
+
+```{r}
+# simple wordcloud of most frequently used words
+library("tm")
+library("SnowballC")
+library("wordcloud")
+library("RColorBrewer")
+wordcloud(words = frequent_terms$term, freq = frequent_terms$counts, min.freq = 10000,
+          max.words = 200, random.order = FALSE, rot.per = 0.35,  use.r.layout = FALSE,
+          colors=brewer.pal(8, "Dark2"), scale=c(2,0.8))
+```
+
+```{r}
+# sentiment analysis
+library("twitteR")
+library("syuzhet")
+emotion.df <- get_nrc_sentiment(frequent_terms$term)
+colSums(emotion.df)
+```
+
+```{r}
+# sentiment graphics
+emotion.counts <- data.frame(values = colSums(emotion.df, na.rm = TRUE), names = names(emotion.df))
+ggplot(emotion.counts, aes(x = names, y = values)) +
+  geom_bar(stat = "identity", fill = "royalblue3") +
+  xlab("Sentiments") +
+  ylab("Counts") +
+  ggtitle("Senitment Counts in Tweets") +
+  theme_bw()
+```
+
+```{r}
+# read in raw tweets
+tweets <- read_csv("raghava_tweets.csv")
+```
+
+```{r}
+# number of tweets in english
+table(tweets$lang)
+```
+
