@@ -1,0 +1,53 @@
+---
+title: "Tweet_Sentiment_Analysis"
+author: "Raghava Govil"
+date: "5/14/2020"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+```
+
+```{r}
+library(data.table)
+tweets <- fread("tweets.csv")
+```
+
+```{r}
+library(dplyr)
+library(stringi)
+```
+
+```{r}
+df <- data.frame(phrase = character(), 
+                 negative = numeric(),
+                 neutral = numeric(),
+                 positive = numeric(),
+                 compound = numeric())
+detect <- function(phrase){
+  indices <- lapply(phrase, function(x) stri_detect_fixed(tweets$text, x, case_insensitive =TRUE)) %>% unlist()
+  row <- c(phrase, tweets[indices, c(4,5,6,7)] %>% colMeans() %>% round(3)) 
+  df <- rbind.data.frame(df,row)
+  colnames(df) <- c("Phrase", "Negative", "Neutral", "Positive", "Compound")
+  return(df)
+}
+
+```
+
+
+```{r}
+# health related terms
+health <- lapply(c("coronavirus","masks","COVID-19", "vaccine", "testing", "quarantine","lockdown"), detect) %>% rbindlist()
+
+# news
+news <- lapply(c("united states", "trump", "fake news", "news", "media","hoax"), detect) %>% rbindlist()
+
+# election
+election <- lapply(c("democrat","republican","liberal","conservative","trump","biden","election"), detect) %>% rbindlist()
+
+# essential workers 
+essential <- lapply(c("essential","work","working from home","WFH","essential worker",
+                      "nurses","employment","insurance","unemployment","jobs","stay at home"), detect) %>% rbindlist()
+```
+
