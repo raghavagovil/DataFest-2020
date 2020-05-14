@@ -5,50 +5,427 @@ date: "5/13/2020"
 output: html_document
 ---
 
-```{r}
+```{r message = FALSE, warning = FALSE}
 library(tidyverse)
 library(questionr)
 options(scipen=999)
-setwd("~/Downloads")
 survey <- read_csv("CLEANED_SURVEY_64.csv")
-View(survey)
+#View(survey)
 ```
 
 ```{r}
 colSums(is.na(survey))
 ```
-
+F_CREGION, F_AGECAT, F_RACETHN, F_PARTYSUM_FINAL, F_INCOME_RECODE
 
 ```{r}
 colnames(survey)
 ```
 
-Has your personal life changed?
-
+How closely have you been following news about the outbreak of the coronavirus strain known as COVID-19? - useless
 ```{r}
-wtd.table(survey$COVIDCHG_W64, y = survey$F_PARTYSUM_FINAL, weights = survey$WEIGHT_W64) %>% prop.table()
+wtd.table(survey$COVIDFOL_W64, y = survey$F_PARTYSUM_FINAL, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVIDFOL_W64, y = survey$F_CREGION, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVIDFOL_W64, y = survey$F_AGECAT, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVIDFOL_W64, y = survey$F_RACETHN, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVIDFOL_W64, y = survey$F_INCOME_RECODE, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
 ```
 
-
+As a result of the coronavirus outbreak, how has your personal life chnaged? - useless
 ```{r}
-wtd.table(survey$COVIDCHG_W64, y = survey$F_PARTYSUM_FINAL, weights = survey$WEIGHT_W64) %>% prop.table()
+wtd.table(survey$COVIDCHG_W64, y = survey$F_PARTYSUM_FINAL, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVIDCHG_W64, y = survey$F_CREGION, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVIDCHG_W64, y = survey$F_AGECAT, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVIDCHG_W64, y = survey$F_RACETHN, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVIDCHG_W64, y = survey$F_INCOME_RECODE, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
 ```
 
-
-
-
-How has Donald Trump done responding to COVID?
+How would you rate the job each of the following is doing responding to the coronavirus outbreak? 
+- Donald Trump
+Analysis: In general people think he has performed poorly
 ```{r}
-wtd.table(survey$COVIDEGFP_a_W64, y = survey$F_PARTYSUM_FINAL, weights = survey$WEIGHT_W64) %>% prop.table()
+wtd.table(survey$COVIDEGFP_a_W64, y = survey$F_PARTYSUM_FINAL, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVIDEGFP_a_W64, y = survey$F_CREGION, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVIDEGFP_a_W64, y = survey$F_AGECAT, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVIDEGFP_a_W64, y = survey$F_RACETHN, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVIDEGFP_a_W64, y = survey$F_INCOME_RECODE, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
 ```
 
+How would you rate the job each of the following is doing responding to the coronavirus outbreak? 
+- Your state elected officials
+Analysis: Netural - pepple are okay with it 
 ```{r}
-
+wtd.table(survey$COVIDEGFP_b_W64, y = survey$F_PARTYSUM_FINAL, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVIDEGFP_b_W64, y = survey$F_CREGION, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVIDEGFP_b_W64, y = survey$F_AGECAT, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVIDEGFP_b_W64, y = survey$F_RACETHN, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVIDEGFP_b_W64, y = survey$F_INCOME_RECODE, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
 ```
 
-
+How would you rate the job each of the following is doing responding to the coronavirus outbreak? 
+- Your local elected officials
+Analysis: Same as previous one
 ```{r}
-wtd.table(survey$COVIDEGFP_a_W64, y = survey$F_PARTYSUM_FINAL, weights = survey$WEIGHT_W64) %>% prop.table()
+wtd.table(survey$COVIDEGFP_c_W64, y = survey$F_PARTYSUM_FINAL, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVIDEGFP_c_W64, y = survey$F_CREGION, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVIDEGFP_c_W64, y = survey$F_AGECAT, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVIDEGFP_c_W64, y = survey$F_RACETHN, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVIDEGFP_c_W64, y = survey$F_INCOME_RECODE, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
 ```
 
+How would you rate the job each of the following is doing responding to the coronavirus outbreak? - useless
+- Public health officials such as those at the CDC (Centers for Disease Control and Prevention)
+```{r}
+wtd.table(survey$COVIDEGFP_d_W64, y = survey$F_PARTYSUM_FINAL, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVIDEGFP_d_W64, y = survey$F_CREGION, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVIDEGFP_d_W64, y = survey$F_AGECAT, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVIDEGFP_d_W64, y = survey$F_RACETHN, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVIDEGFP_d_W64, y = survey$F_INCOME_RECODE, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+```
 
+How would you rate the job each of the following is doing responding to the coronavirus outbreak? 
+- Ordinary people in your local community
+Analysis: Most people are okay with it
+```{r}
+wtd.table(survey$COVIDEGFP_e_W64, y = survey$F_PARTYSUM_FINAL, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVIDEGFP_e_W64, y = survey$F_CREGION, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVIDEGFP_e_W64, y = survey$F_AGECAT, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVIDEGFP_e_W64, y = survey$F_RACETHN, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVIDEGFP_e_W64, y = survey$F_INCOME_RECODE, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+```
+
+How would you rate the job each of the following is doing responding to the coronavirus outbreak? 
+- The news media
+Analysis: Democrats are trusting the news generally more. Younger people trust news lesser than older generation
+```{r}
+wtd.table(survey$COVIDEGFP_f_W64, y = survey$F_PARTYSUM_FINAL, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVIDEGFP_f_W64, y = survey$F_CREGION, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVIDEGFP_f_W64, y = survey$F_AGECAT, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVIDEGFP_f_W64, y = survey$F_RACETHN, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVIDEGFP_f_W64, y = survey$F_INCOME_RECODE, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+```
+
+How much of a threat, if any, is the coronavirus outbreak for...
+- The health of the U.S. population as whole
+Analysis: More republicans think its not a threat than democrats
+```{r}
+wtd.table(survey$COVIDTHREAT_a_W64, y = survey$F_PARTYSUM_FINAL, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVIDTHREAT_a_W64, y = survey$F_CREGION, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVIDTHREAT_a_W64, y = survey$F_AGECAT, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVIDTHREAT_a_W64, y = survey$F_RACETHN, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVIDTHREAT_a_W64, y = survey$F_INCOME_RECODE, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+```
+
+How much of a threat, if any, is the coronavirus outbreak for...
+- Your personal health
+Analysis: Old people think its more threatening personally. Democrat and Republic outlook is similar
+```{r}
+wtd.table(survey$COVIDTHREAT_b_W64, y = survey$F_PARTYSUM_FINAL, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVIDTHREAT_b_W64, y = survey$F_CREGION, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVIDTHREAT_b_W64, y = survey$F_AGECAT, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVIDTHREAT_b_W64, y = survey$F_RACETHN, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVIDTHREAT_b_W64, y = survey$F_INCOME_RECODE, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+```
+
+How much of a threat, if any, is the coronavirus outbreak for...
+- The U.S. economy
+Analysis: Everyone thinks its a major threat
+```{r}
+wtd.table(survey$COVIDTHREAT_c_W64, y = survey$F_PARTYSUM_FINAL, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVIDTHREAT_c_W64, y = survey$F_CREGION, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVIDTHREAT_c_W64, y = survey$F_AGECAT, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVIDTHREAT_c_W64, y = survey$F_RACETHN, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVIDTHREAT_c_W64, y = survey$F_INCOME_RECODE, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+```
+
+How much of a threat, if any, is the coronavirus outbreak for...
+- Your personal financial situation
+Analysis: Democrats are more worried, old people don't care, >$75,000 income less worried
+```{r}
+wtd.table(survey$COVIDTHREAT_d_W64, y = survey$F_PARTYSUM_FINAL, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVIDTHREAT_d_W64, y = survey$F_CREGION, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVIDTHREAT_d_W64, y = survey$F_AGECAT, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVIDTHREAT_d_W64, y = survey$F_RACETHN, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVIDTHREAT_d_W64, y = survey$F_INCOME_RECODE, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+```
+
+Now, thinking about how different people and groups are reacting to the coronavirus outbreak, how would you say each of the following is reacting?
+- Your state government
+Analysis: Younger people think state officials could do better, as compared to 65+
+```{r}
+wtd.table(survey$COVID_STEPS_a_W64, y = survey$F_PARTYSUM_FINAL, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVID_STEPS_a_W64, y = survey$F_CREGION, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVID_STEPS_a_W64, y = survey$F_AGECAT, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVID_STEPS_a_W64, y = survey$F_RACETHN, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVID_STEPS_a_W64, y = survey$F_INCOME_RECODE, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+```
+
+Now, thinking about how different people and groups are reacting to the coronavirus outbreak, how would you say each of the following is reacting?
+- Your local government
+Analysis: Trend in age same as above
+```{r}
+wtd.table(survey$COVID_STEPS_b_W64, y = survey$F_PARTYSUM_FINAL, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVID_STEPS_b_W64, y = survey$F_CREGION, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVID_STEPS_b_W64, y = survey$F_AGECAT, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVID_STEPS_b_W64, y = survey$F_RACETHN, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVID_STEPS_b_W64, y = survey$F_INCOME_RECODE, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+```
+
+Now, thinking about how different people and groups are reacting to the coronavirus outbreak, how would you say each of the following is reacting?
+- Your local school system
+Analysis: Everyone is happy with it
+```{r}
+wtd.table(survey$COVID_STEPS_c_W64, y = survey$F_PARTYSUM_FINAL, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVID_STEPS_c_W64, y = survey$F_CREGION, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVID_STEPS_c_W64, y = survey$F_AGECAT, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVID_STEPS_c_W64, y = survey$F_RACETHN, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVID_STEPS_c_W64, y = survey$F_INCOME_RECODE, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+```
+
+Now, thinking about how different people and groups are reacting to the coronavirus outbreak, how would you say each of the following is reacting?
+- Ordinary people in your community
+Analysis: Young people again are distrustful
+```{r}
+wtd.table(survey$COVID_STEPS_e_W64, y = survey$F_PARTYSUM_FINAL, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVID_STEPS_e_W64, y = survey$F_CREGION, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVID_STEPS_e_W64, y = survey$F_AGECAT, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVID_STEPS_e_W64, y = survey$F_RACETHN, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVID_STEPS_e_W64, y = survey$F_INCOME_RECODE, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+```
+
+Now, thinking about how different people and groups are reacting to the coronavirus outbreak, how would you say each of the following is reacting?
+- Ordinary people across the country
+Analysis: A large portion of people think poeple are overreacting; young people trust local community more than country
+```{r}
+wtd.table(survey$COVID_STEPS_f_W64, y = survey$F_PARTYSUM_FINAL, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVID_STEPS_f_W64, y = survey$F_CREGION, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVID_STEPS_f_W64, y = survey$F_AGECAT, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVID_STEPS_f_W64, y = survey$F_RACETHN, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVID_STEPS_f_W64, y = survey$F_INCOME_RECODE, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+```
+
+Now, thinking about how different people and groups are reacting to the coronavirus outbreak, how would you say each of the following is reacting?
+- The people in your household
+Analysis: Happy with it across the board
+```{r}
+wtd.table(survey$COVID_STEPS_g_W64, y = survey$F_PARTYSUM_FINAL, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVID_STEPS_g_W64, y = survey$F_CREGION, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVID_STEPS_g_W64, y = survey$F_AGECAT, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVID_STEPS_g_W64, y = survey$F_RACETHN, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVID_STEPS_g_W64, y = survey$F_INCOME_RECODE, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+```
+
+Given the current situation with the coronavirus outbreak, would you feel comfortable or uncomfortable doing each of the following?
+- Visiting with a close friend or family member at their home
+Analysis: Democrats are less comfortable, young people more comfortable
+```{r}
+wtd.table(survey$COVID_COMFORT_a_W64, y = survey$F_PARTYSUM_FINAL, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVID_COMFORT_a_W64, y = survey$F_CREGION, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVID_COMFORT_a_W64, y = survey$F_AGECAT, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVID_COMFORT_a_W64, y = survey$F_RACETHN, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVID_COMFORT_a_W64, y = survey$F_INCOME_RECODE, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+```
+
+Given the current situation with the coronavirus outbreak, would you feel comfortable or uncomfortable doing each of the following?
+- Eating out in a restaurant
+Analysis: More republicans are okay with it, more young people are okay with it
+```{r}
+wtd.table(survey$COVID_COMFORT_b_W64, y = survey$F_PARTYSUM_FINAL, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVID_COMFORT_b_W64, y = survey$F_CREGION, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVID_COMFORT_b_W64, y = survey$F_AGECAT, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVID_COMFORT_b_W64, y = survey$F_RACETHN, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVID_COMFORT_b_W64, y = survey$F_INCOME_RECODE, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+```
+
+Given the current situation with the coronavirus outbreak, would you feel comfortable or uncomfortable doing each of the following?
+- Attending a crowded party
+Analysis: Generally people aren't okay with it
+```{r}
+wtd.table(survey$COVID_COMFORT_c_W64, y = survey$F_PARTYSUM_FINAL, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVID_COMFORT_c_W64, y = survey$F_CREGION, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVID_COMFORT_c_W64, y = survey$F_AGECAT, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVID_COMFORT_c_W64, y = survey$F_RACETHN, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVID_COMFORT_c_W64, y = survey$F_INCOME_RECODE, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+```
+
+Given the current situation with the coronavirus outbreak, would you feel comfortable or uncomfortable doing each of the following?
+- Going out to the grocery store
+Analysis: More republicans are okay
+```{r}
+wtd.table(survey$COVID_COMFORT_d_W64, y = survey$F_PARTYSUM_FINAL, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVID_COMFORT_d_W64, y = survey$F_CREGION, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVID_COMFORT_d_W64, y = survey$F_AGECAT, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVID_COMFORT_d_W64, y = survey$F_RACETHN, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVID_COMFORT_d_W64, y = survey$F_INCOME_RECODE, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+```
+
+Given the current situation with the coronavirus outbreak, would you feel comfortable or uncomfortable doing each of the following?
+- Going to a polling place to vote
+Analysis: More Repubilcans
+```{r}
+wtd.table(survey$COVID_COMFORT_e_W64, y = survey$F_PARTYSUM_FINAL, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVID_COMFORT_e_W64, y = survey$F_CREGION, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVID_COMFORT_e_W64, y = survey$F_AGECAT, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVID_COMFORT_e_W64, y = survey$F_RACETHN, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVID_COMFORT_e_W64, y = survey$F_INCOME_RECODE, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+```
+
+Thinking about some steps that have been announced in some areas to address the coronavirus outbreak, in general do you think each of the
+following have been necessary or unnecessary?
+- Restricting international travel to the U.S.
+Analysis: Everyone doesn't want it
+```{r}
+wtd.table(survey$COVID_RESTRICTION_a_W64, y = survey$F_PARTYSUM_FINAL, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVID_RESTRICTION_a_W64, y = survey$F_CREGION, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVID_RESTRICTION_a_W64, y = survey$F_AGECAT, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVID_RESTRICTION_a_W64, y = survey$F_RACETHN, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVID_RESTRICTION_a_W64, y = survey$F_INCOME_RECODE, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+```
+
+Thinking about some steps that have been announced in some areas to address the coronavirus outbreak, in general do you think each of the
+following have been necessary or unnecessary?
+- Requiring most businesses other than grocery stores and pharmacies to close
+Analysis: More democrats want things to close than republicans
+```{r}
+wtd.table(survey$COVID_RESTRICTION_b_W64, y = survey$F_PARTYSUM_FINAL, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVID_RESTRICTION_b_W64, y = survey$F_CREGION, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVID_RESTRICTION_b_W64, y = survey$F_AGECAT, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVID_RESTRICTION_b_W64, y = survey$F_RACETHN, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVID_RESTRICTION_b_W64, y = survey$F_INCOME_RECODE, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+```
+
+Thinking about some steps that have been announced in some areas to address the coronavirus outbreak, in general do you think each of the
+following have been necessary or unnecessary?
+- Asking people to avoid gathering in groups of more than ten
+Analysis: Uniform across the board
+```{r}
+wtd.table(survey$COVID_RESTRICTION_c_W64, y = survey$F_PARTYSUM_FINAL, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVID_RESTRICTION_c_W64, y = survey$F_CREGION, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVID_RESTRICTION_c_W64, y = survey$F_AGECAT, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVID_RESTRICTION_c_W64, y = survey$F_RACETHN, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVID_RESTRICTION_c_W64, y = survey$F_INCOME_RECODE, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+```
+
+Thinking about some steps that have been announced in some areas to address the coronavirus outbreak, in general do you think each of the
+following have been necessary or unnecessary?
+- Cancelling major sports and entertainment events
+Analysis: Uniform
+```{r}
+wtd.table(survey$COVID_RESTRICTION_d_W64, y = survey$F_PARTYSUM_FINAL, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVID_RESTRICTION_d_W64, y = survey$F_CREGION, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVID_RESTRICTION_d_W64, y = survey$F_AGECAT, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVID_RESTRICTION_d_W64, y = survey$F_RACETHN, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVID_RESTRICTION_d_W64, y = survey$F_INCOME_RECODE, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+```
+
+Thinking about some steps that have been announced in some areas to address the coronavirus outbreak, in general do you think each of the
+following have been necessary or unnecessary?
+- Closing K-12 schools
+Analysis: Uniform
+```{r}
+wtd.table(survey$COVID_RESTRICTION_e_W64, y = survey$F_PARTYSUM_FINAL, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVID_RESTRICTION_e_W64, y = survey$F_CREGION, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVID_RESTRICTION_e_W64, y = survey$F_AGECAT, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVID_RESTRICTION_e_W64, y = survey$F_RACETHN, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVID_RESTRICTION_e_W64, y = survey$F_INCOME_RECODE, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+```
+
+Thinking about some steps that have been announced in some areas to address the coronavirus outbreak, in general do you think each of the
+following have been necessary or unnecessary?
+- Limiting restaurants to carry-out only
+Analysis: More democrats want take-out only
+```{r}
+wtd.table(survey$COVID_RESTRICTION_f_W64, y = survey$F_PARTYSUM_FINAL, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVID_RESTRICTION_f_W64, y = survey$F_CREGION, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVID_RESTRICTION_f_W64, y = survey$F_AGECAT, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVID_RESTRICTION_f_W64, y = survey$F_RACETHN, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVID_RESTRICTION_f_W64, y = survey$F_INCOME_RECODE, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+```
+
+Thinking about some steps that have been announced in some areas to address the coronavirus outbreak, in general do you think each of the
+following have been necessary or unnecessary?
+- Postponing upcoming state primary elections
+Analysis: More democrats want to postpone, Less in west want to postpone, more younger people want to postpone
+```{r}
+wtd.table(survey$COVID_RESTRICTION_g_W64, y = survey$F_PARTYSUM_FINAL, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVID_RESTRICTION_g_W64, y = survey$F_CREGION, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVID_RESTRICTION_g_W64, y = survey$F_AGECAT, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVID_RESTRICTION_g_W64, y = survey$F_RACETHN, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVID_RESTRICTION_g_W64, y = survey$F_INCOME_RECODE, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+```
+
+For each of the following, indicate whether or not it is something that happened to YOU OR SOMEONE IN YOUR HOUSEHOLD because of the coronavirus outbreak.
+- Been laid off or lost a job
+Analysis: more low-income were laid off than high-income, more democrats lost their jobs than republicans
+```{r}
+wtd.table(survey$COVIDWORK_a_W64, y = survey$F_PARTYSUM_FINAL, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVIDWORK_a_W64, y = survey$F_CREGION, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVIDWORK_a_W64, y = survey$F_AGECAT, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVIDWORK_a_W64, y = survey$F_RACETHN, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVIDWORK_a_W64, y = survey$F_INCOME_RECODE, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+```
+
+For each of the following, indicate whether or not it is something that happened to YOU OR SOMEONE IN YOUR HOUSEHOLD because of the coronavirus outbreak.
+- Had to take a cut in pay due to reduced hours or demand for your work
+Analysis: more low income had to take a pay cut 
+```{r}
+wtd.table(survey$COVIDWORK_b_W64, y = survey$F_PARTYSUM_FINAL, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVIDWORK_b_W64, y = survey$F_CREGION, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVIDWORK_b_W64, y = survey$F_AGECAT, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVIDWORK_b_W64, y = survey$F_RACETHN, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVIDWORK_b_W64, y = survey$F_INCOME_RECODE, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+```
+
+Based on what you have read and heard, what kind of economic impact do you believe that the coronavirus outbreak will have on the United States? - useless
+```{r}
+wtd.table(survey$COVID_RECESSION_W64, y = survey$F_PARTYSUM_FINAL, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVID_RECESSION_W64, y = survey$F_CREGION, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVID_RECESSION_W64, y = survey$F_AGECAT, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVID_RECESSION_W64, y = survey$F_RACETHN, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVID_RECESSION_W64, y = survey$F_INCOME_RECODE, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+```
+
+How confident, if at all, are you that each of the following will be able to handle the medical needs of people who are seriously ill during the coronavirus
+outbreak?
+- Hospitals and medical centers in your area
+Analysis: More republicans believe so
+```{r}
+wtd.table(survey$COVID_HEALTHSYS_a_W64, y = survey$F_PARTYSUM_FINAL, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVID_HEALTHSYS_a_W64, y = survey$F_CREGION, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVID_HEALTHSYS_a_W64, y = survey$F_AGECAT, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVID_HEALTHSYS_a_W64, y = survey$F_RACETHN, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVID_HEALTHSYS_a_W64, y = survey$F_INCOME_RECODE, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+```
+
+How confident, if at all, are you that each of the following will be able to handle the medical needs of people who are seriously ill during the coronavirus
+outbreak?
+- Hospitals and medical centers around the country
+Analysis: Low confidence across all boards, but more republicans are still more confident
+```{r}
+wtd.table(survey$COVID_HEALTHSYS_b_W64, y = survey$F_PARTYSUM_FINAL, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVID_HEALTHSYS_b_W64, y = survey$F_CREGION, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVID_HEALTHSYS_b_W64, y = survey$F_AGECAT, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVID_HEALTHSYS_b_W64, y = survey$F_RACETHN, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVID_HEALTHSYS_b_W64, y = survey$F_INCOME_RECODE, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+```
+
+How confident, if at all, are you that each of the following will be able to handle the medical needs of people who are seriously ill during the coronavirus
+outbreak?
+- Nursing homes in your area
+Analysis: Low confidence across the board
+```{r}
+wtd.table(survey$COVID_HEALTHSYS_c_W64, y = survey$F_PARTYSUM_FINAL, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVID_HEALTHSYS_c_W64, y = survey$F_CREGION, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVID_HEALTHSYS_c_W64, y = survey$F_AGECAT, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVID_HEALTHSYS_c_W64, y = survey$F_RACETHN, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVID_HEALTHSYS_c_W64, y = survey$F_INCOME_RECODE, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+```
+
+Has a doctor or other healthcare provider EVER told you that you have a mental health condition? - uselesss
+```{r}
+wtd.table(survey$COVID_MENTAL_W64, y = survey$F_PARTYSUM_FINAL, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVID_MENTAL_W64, y = survey$F_CREGION, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVID_MENTAL_W64, y = survey$F_AGECAT, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVID_MENTAL_W64, y = survey$F_RACETHN, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVID_MENTAL_W64, y = survey$F_INCOME_RECODE, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+```
