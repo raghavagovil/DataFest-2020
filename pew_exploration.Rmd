@@ -23,32 +23,117 @@ colSums(is.na(survey))
 colnames(survey)
 ```
 
-Has your personal life changed?
+Has your personal life changed? dash this question
+
+```{r}
+wtd.table(survey$COVIDCHG_W64, y = survey$F_CDIVISION, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+```
 
 ```{r}
 wtd.table(survey$COVIDCHG_W64, y = survey$F_PARTYSUM_FINAL, weights = survey$WEIGHT_W64) %>% prop.table()
 ```
 
-
-```{r}
-wtd.table(survey$COVIDCHG_W64, y = survey$F_PARTYSUM_FINAL, weights = survey$WEIGHT_W64) %>% prop.table()
-```
-
+F_CREGION, F_AGECAT, F_RACETHN, F_PARTYSUM_FINAL, F_INCOME_RECODE 
 
 
 
 How has Donald Trump done responding to COVID?
 ```{r}
+wtd.table(survey$COVIDEGFP_a_W64, y = survey$F_CREGION, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+
+wtd.table(survey$COVIDEGFP_a_W64, y = survey$F_AGECAT, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+
+wtd.table(survey$COVIDEGFP_a_W64, y = survey$F_RACETHN, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+
+wtd.table(survey$COVIDEGFP_a_W64, y = survey$F_PARTYSUM_FINAL, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+
+wtd.table(survey$COVIDEGFP_a_W64, y = survey$F_INCOME_RECODE, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+```
+
+Your state elected officials:
+```{r}
+wtd.table(survey$COVIDEGFP_b_W64, y = survey$F_CREGION, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+
+wtd.table(survey$COVIDEGFP_b_W64, y = survey$F_AGECAT, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+
+wtd.table(survey$COVIDEGFP_b_W64, y = survey$F_RACETHN, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+
+wtd.table(survey$COVIDEGFP_b_W64, y = survey$F_PARTYSUM_FINAL, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+
+wtd.table(survey$COVIDEGFP_b_W64, y = survey$F_INCOME_RECODE, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+```
+
+Your local elected officials:
+```{r}
+wtd.table(survey$COVIDEGFP_c_W64, y = survey$F_CREGION, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+
+wtd.table(survey$COVIDEGFP_c_W64, y = survey$F_AGECAT, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+
+wtd.table(survey$COVIDEGFP_c_W64, y = survey$F_RACETHN, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+
+wtd.table(survey$COVIDEGFP_c_W64, y = survey$F_PARTYSUM_FINAL, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+
+wtd.table(survey$COVIDEGFP_c_W64, y = survey$F_INCOME_RECODE, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+```
+
+Public Health Officials (like CDC):
+```{r}
+wtd.table(survey$COVIDEGFP_d_W64, y = survey$F_CREGION, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+
+wtd.table(survey$COVIDEGFP_d_W64, y = survey$F_AGECAT, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+
+wtd.table(survey$COVIDEGFP_d_W64, y = survey$F_RACETHN, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+
+wtd.table(survey$COVIDEGFP_d_W64, y = survey$F_PARTYSUM_FINAL, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+
+wtd.table(survey$COVIDEGFP_d_W64, y = survey$F_INCOME_RECODE, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+```
+
+Ordinary ppl in your community:
+```{r}
+wtd.table(survey$COVIDEGFP_e_W64, y = survey$F_CREGION, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+
+wtd.table(survey$COVIDEGFP_e_W64, y = survey$F_AGECAT, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+
+wtd.table(survey$COVIDEGFP_e_W64, y = survey$F_RACETHN, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+
+wtd.table(survey$COVIDEGFP_e_W64, y = survey$F_PARTYSUM_FINAL, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+
+wtd.table(survey$COVIDEGFP_e_W64, y = survey$F_INCOME_RECODE, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+```
+
+The news media:
+```{r}
+wtd.table(survey$COVIDEGFP_f_W64, y = survey$F_CREGION, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+
+wtd.table(survey$COVIDEGFP_f_W64, y = survey$F_AGECAT, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+
+wtd.table(survey$COVIDEGFP_f_W64, y = survey$F_RACETHN, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+
+wtd.table(survey$COVIDEGFP_f_W64, y = survey$F_PARTYSUM_FINAL, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+
+wtd.table(survey$COVIDEGFP_f_W64, y = survey$F_INCOME_RECODE, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+```
+
+**Look at dems and republicans here; a key key finding**
+
+
+```{r}
 wtd.table(survey$COVIDEGFP_a_W64, y = survey$F_PARTYSUM_FINAL, weights = survey$WEIGHT_W64) %>% prop.table()
+```
+
+
+```{r}
+wtd.table(survey$F_PARTYSUM_FINAL, y = survey$F_CDIVISION, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+```
+
+Income vs party:
+```{r}
+wtd.table(survey$F_PARTYSUM_FINAL, survey$F_INCOME_RECODE, survey$WEIGHT_W64) %>% prop.table(margin=1)
 ```
 
 ```{r}
 
-```
-
-
-```{r}
-wtd.table(survey$COVIDEGFP_a_W64, y = survey$F_PARTYSUM_FINAL, weights = survey$WEIGHT_W64) %>% prop.table()
 ```
 
 
