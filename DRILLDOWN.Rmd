@@ -9,7 +9,7 @@ output: html_document
 library(tidyverse)
 library(questionr)
 options(scipen=999)
-survey <- read_csv("~/Documents/DataFest-2020/CLEANED_SURVEY_64.csv")
+survey <- read_csv("CLEANED_SURVEY_64.csv")
 ```
 
 #Drill down: East South Central vs. Pacific
