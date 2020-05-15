@@ -1,0 +1,500 @@
+---
+title: "DataFest"
+author: "Kevin Chen"
+date: "May 11, 2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#Mobilty Data
+
+## Read Data
+```{r}
+library(readr)
+library(tidyverse)
+
+#read csv file
+mobility_data <- read.csv("Mobility and Lockdown Data\\Global_Mobility_Report_2.csv")
+names(mobility_data)
+```
+
+
+#filter United States Data
+
+```{r}
+mobility_us <- mobility_data %>% filter(country_region_code == "US")
+
+#check NAs
+summary(mobility_us)
+
+#convert to date
+mobility_us$date <- as.Date(mobility_us$date, "%Y-%m-%d")
+
+#find months
+mobility_us$month <- months(mobility_us$date)
+```
+
+
+#filter to March--May
+```{r}
+#mar to may
+mobility_mar_may <- mobility_us %>% filter(month %in% c("March","April","May")) 
+
+#select Residential
+mobility_residential <- mobility_mar_may %>% filter(sub_region_2 =="" & sub_region_1 != "")
+
+#select relevant columns
+mobility_mar_may <- mobility_mar_may[,c(1:7,9,10,12)] 
+
+#mean change in movement categories visits by state
+#each row of mobility us data reprsents a day 
+mobility_summaries <- mobility_mar_may %>% 
+  filter(sub_region_2 =="" & sub_region_1 != "") %>% #filter out general US observations and county observations
+  group_by(sub_region_1) %>% summarise( Total_State_Observations = n(),
+                                                      Grocery = mean(grocery_and_pharmacy_percent_change_from_baseline, na.rm = TRUE),
+                                                      Grocery_NA = sum(is.na(grocery_and_pharmacy_percent_change_from_baseline))*100/n(),
+                                                      Retail_and_Rec = mean(retail_and_recreation_percent_change_from_baseline, na.rm = TRUE),
+                                                      Retail_NA = sum(is.na(retail_and_recreation_percent_change_from_baseline))*100/n(),
+                                                      Workplace = mean(workplaces_percent_change_from_baseline, na.rm = TRUE),
+                                                      Workplace_NA = sum(is.na(workplaces_percent_change_from_baseline))*100/n(),
+                                                      Transit = mean(transit_stations_percent_change_from_baseline, na.rm = TRUE),
+                                                      Transit_NA = sum(is.na(transit_stations_percent_change_from_baseline))*100/n())
+
+
+write.csv(mobility_summaries, file = "mobility_summaries.csv")
+```
+
+#States and Regions
+```{r}
+states <- mobility_summaries$sub_region_1 %>% as.character()
+region <- c("South", "West", "West", "South", "West", "West", "Northeast", "South", "South", "South", "South", "West", "West", "Midwest", "Midwest", "Midwest", "Midwest", "South", "South", "Northeast", "South", "Northeast", "Midwest", "Midwest", "South", "Midwest", "West", "Midwest", "West", "Northeast", "Northeast", "West", "Northeast", "South", "Midwest", "Midwest", "South", "West", "Northeast", "Northeast", "South", "Midwest", "South", "South", "West", "Northeast", "South", "West", "South", "Midwest","West")
+region_df <- data.frame(States = states, Region = region)
+```
+
+
+#States and Subdivisions
+```{r}
+division <- c("East South Central", "Pacific", "Mountain", "West South Central", "Pacific", "Mountain", "New England", "South Atlantic", "South Atlantic","South Atlantic", "South Atlantic", "Pacific", "Mountain", "East North Central","East North Central", "West North Central", "West North Central", "East South Central", "West South Central","New England", "South Atlantic", "New England", "East North Central","West North Central" ,"East South Central", "West North Central", "Mountain", "West North Central", "Mountain", "New England","Middle Atlantic", "Mountain", "Middle Atlantic", "South Atlantic","West North Central","East North Central", "West South Central", "Pacific", "Middle Atlantic", "New England", "South Atlantic", "West North Central", "East South Central","West South Central","Mountain","New England", "South Atlantic", "Pacific","South Atlantic","East North Central", "Mountain")
+divisions_df <- data.frame(state = states, division = division)
+```
+
+
+#Read Lockdown Dates Data
+```{r}
+lockdown_dates <- read.csv("lockdown_us.csv")
+
+#filter out county lockdown dates
+lockdown_dates <- lockdown_dates %>% filter(County == "")
+```
+
+#Merge Lockdown and Mobility Data
+```{r}
+#filter out general US obsservations ans county observations
+mobility_mar_may <- mobility_mar_may %>% filter(sub_region_1 != "" & sub_region_2 == "") 
+
+#change names and eliminate country columns
+mobility_mar_may$country_region_code <- NULL
+mobility_mar_may$country_region <- NULL
+mobility_mar_may$sub_region_2 <- NULL
+
+
+summary(mobility_mar_may)
+#change sub_region_1 to State
+names(mobility_mar_may)[1] <- "State" 
+
+#join mobility data with lockdown dates
+mobility_and_lockdown <- left_join(mobility_mar_may, lockdown_dates, by = c("State" = "State")) 
+
+#drop country and county columns
+mobility_and_lockdown$Country <- NULL
+mobility_and_lockdown$County <- NULL
+
+#rename lockdown dat and type cloumns
+mobility_and_lockdown <- mobility_and_lockdown %>% rename(Lockdown_Date = Date,                                                           Lockdown_Type = Type)
+
+#reorder df
+mobility_and_lockdown <- mobility_and_lockdown %>% select(State, date, month, Lockdown_Date, Lockdown_Type, everything())
+
+#convert lockdown date to character
+mobility_and_lockdown$Lockdown_Date <- mobility_and_lockdown$Lockdown_Date %>% as.character() 
+
+#convert lockdown date to date format
+mobility_and_lockdown$Lockdown_Date <- mobility_and_lockdown$Lockdown_Date %>% as.Date("%Y-%m-%d")
+
+```
+
+#Lockdown lifted
+```{r}
+lifted_states <- c("Alabama", "Alaska", "Arkansas", "Colorado", "Florida", "Georgia", "Idaho", "Indiana", "Iowa", "Kansas", "Mississippi", "Missouri", "Montana", "Nebraska","Nevada","North Dakota","Oklahoma",  "Rhode Island", "South Carolina","South Dakota", "Tennessee", "Texas", "Utah", "West Virginia", "Wyoming")
+
+lifted_dates <- c("2020-04-30","2020-04-24", NA, "2020-04-26","2020-05-04","2020-04-30","2020-04-30","2020-05-04",NA,"2020-05-03", "2020-04-27", "2020-05-03", "2020-04-26", NA, "2020-05-09",NA, NA, "2020-05-08", "2020-05-04",NA, "2020-04-30", "2020-04-30", NA, "2020-05-03", NA)
+
+lifted_lockdown <- data.frame(lifted_states = lifted_states, lifted_dates = lifted_dates)
+
+lifted_lockdown$lifted_dates <- as.Date(lifted_lockdown$lifted_dates, "%Y-%m-%d")
+```
+
+#Merge Residential, lockdown, and lockdown lifted
+```{r}
+residential_df <- left_join(mobility_residential, lockdown_dates, by = c("sub_region_1" = "State"))
+residential_df <- left_join(residential_df, lifted_lockdown, by = c("sub_region_1" = "lifted_states"))
+residential_df$Date <- residential_df$Date %>% as.Date("%Y-%m-%d")
+residential_df_prelockdown <- residential_df %>% filter(date <= Date)
+residential_df_prelockdown <- inner_join(residential_df_prelockdown, divisions_df, by = c("sub_region_1" = "state"))
+residential_df_prelockdown <- residential_df_prelockdown %>% group_by(division) %>% summarise(Residential_Change_Before = mean(residential_percent_change_from_baseline, na.rm = TRUE)) 
+
+residential_df_lockdown <- residential_df %>% filter((date > Date & date < lifted_dates) | (date > Date & is.na(lifted_dates)))
+residential_df_lockdown <- inner_join(residential_df_lockdown, divisions_df, by = c("sub_region_1" = "state"))
+residential_df_lockdown <- residential_df_lockdown %>% group_by(division) %>% summarise(Residential_Change_During = mean(residential_percent_change_from_baseline))
+
+residential_df_postlockdown <- residential_df %>% filter(date> lifted_dates)
+residential_df_postlockdown <- inner_join(residential_df_postlockdown, divisions_df, by = c("sub_region_1" = "state"))
+residential_df_postlockdown <- residential_df_postlockdown %>% group_by(division) %>% summarise(Residential_Change_After = mean(residential_percent_change_from_baseline))
+residential_df_merged <- inner_join(residential_df_prelockdown, residential_df_lockdown, by = c("division" = "division"))
+residential_df_merged <- inner_join(residential_df_merged, residential_df_postlockdown, by = c("division" = "division"))
+residential_df_merged %>% View()
+```
+
+
+
+
+#Merge mobility, lockdown, and lockdown lifted
+```{r}
+final_df <- left_join(mobility_and_lockdown, lifted_lockdown, by = c("State" = "lifted_states"))
+
+#reorder columns
+final_df <- final_df %>% select(State, date, month, Lockdown_Date, Lockdown_Type, lifted_dates, everything())
+```
+
+#Merge Region and Mobility
+```{r}
+final_df <- inner_join(final_df, region_df, by = c("State" = "States"))
+final_df <- final_df %>% select(State, Region, everything())
+
+
+#get lockdown states that have not reopened
+perma_lockdown <- final_df %>% filter(!is.na(Lockdown_Date) & is.na(lifted_dates))
+
+#get states tat never had lockdown
+no_lockdown <- final_df %>% filter(is.na(Lockdown_Date))
+no_lockdown
+```
+
+#Analysis before Lockdown by State
+```{r}
+pre_lockdown <- final_df %>% 
+      filter(date <= Lockdown_Date) %>% 
+      group_by(State) %>% 
+      summarise(Grocery = mean(grocery_and_pharmacy_percent_change_from_baseline, na.rm = TRUE),
+                                                      Grocery_NA = sum(is.na(grocery_and_pharmacy_percent_change_from_baseline))*100/n(),
+                                                      Retail_and_Rec = mean(retail_and_recreation_percent_change_from_baseline, na.rm = TRUE),
+                                                      Retail_NA = sum(is.na(retail_and_recreation_percent_change_from_baseline))*100/n(),
+                                                      Workplace = mean(workplaces_percent_change_from_baseline, na.rm = TRUE),
+                                                      Workplace_NA = sum(is.na(workplaces_percent_change_from_baseline))*100/n(),
+                                                      Transit = mean(transit_stations_percent_change_from_baseline, na.rm = TRUE),
+                                                      Transit_NA = sum(is.na(transit_stations_percent_change_from_baseline))*100/n())
+a <- inner_join(pre_lockdown, region_df, by = c("State" = "States")) %>% filter(Region == "West") 
+sum(a$Workplace)/nrow(a)
+```
+
+#Analysis during Lockdown by State
+```{r}
+lockdown <- final_df %>% #states which had lockdown that were then lifted
+            filter(date > Lockdown_Date & date < lifted_dates) %>% 
+            group_by(State) %>%
+            summarise(Grocery = mean(grocery_and_pharmacy_percent_change_from_baseline, na.rm = TRUE),
+                                                      Grocery_NA = sum(is.na(grocery_and_pharmacy_percent_change_from_baseline))*100/n(),
+                                                      Retail_and_Rec = mean(retail_and_recreation_percent_change_from_baseline, na.rm = TRUE),
+                                                      Retail_NA = sum(is.na(retail_and_recreation_percent_change_from_baseline))*100/n(),
+                                                      Workplace = mean(workplaces_percent_change_from_baseline, na.rm = TRUE),
+                                                      Workplace_NA = sum(is.na(workplaces_percent_change_from_baseline))*100/n(),
+                                                      Transit = mean(transit_stations_percent_change_from_baseline, na.rm = TRUE),
+                                                      Transit_NA = sum(is.na(transit_stations_percent_change_from_baseline))*100/n())
+lockdown
+```
+
+#Analysis after Lockdown by State
+```{r}
+post_lockdown <- final_df %>% #states which had lockdown that were then lifted
+            filter(date > lifted_dates) %>% 
+            group_by(State) %>%
+            summarise(Grocery = mean(grocery_and_pharmacy_percent_change_from_baseline, na.rm = TRUE),
+                                                      Grocery_NA = sum(is.na(grocery_and_pharmacy_percent_change_from_baseline))*100/n(),
+                                                      Retail_and_Rec = mean(retail_and_recreation_percent_change_from_baseline, na.rm = TRUE),
+                                                      Retail_NA = sum(is.na(retail_and_recreation_percent_change_from_baseline))*100/n(),
+                                                      Workplace = mean(workplaces_percent_change_from_baseline, na.rm = TRUE),
+                                                      Workplace_NA = sum(is.na(workplaces_percent_change_from_baseline))*100/n(),
+                                                      Transit = mean(transit_stations_percent_change_from_baseline, na.rm = TRUE),
+                                                      Transit_NA = sum(is.na(transit_stations_percent_change_from_baseline))*100/n())
+post_lockdown
+```
+
+#Analysis before lockdown by Region
+```{r}
+region_pre_lockdown <- inner_join(pre_lockdown, region_df, by = c("State" = "States"))
+region_pre_lockdown %>% group_by(Region) %>% summarise(Grocery = mean(Grocery),
+                                                       Retail_and_Rec = mean(Retail_and_Rec),
+                                                       Workplace = mean(Workplace),
+                                                       Transit = mean(Transit))
+```
+
+#Analysis during lockdown by Region
+```{r}
+region_lockdown <- inner_join(lockdown, region_df, by = c("State" = "States"))
+region_lockdown %>% group_by(Region) %>% summarise(Grocery = mean(Grocery),
+                                                       Retail_and_Rec = mean(Retail_and_Rec),
+                                                       Workplace = mean(Workplace),
+                                                       Transit = mean(Transit)) 
+```
+
+#Analysis post-lockown by region
+```{r}
+region_lockdown <- inner_join(post_lockdown, region_df, by = c("State" = "States"))
+region_lockdown %>% group_by(Region) %>% summarise(Grocery = mean(Grocery),
+                                                       Retail_and_Rec = mean(Retail_and_Rec),
+                                                       Workplace = mean(Workplace),
+                                                       Transit = mean(Transit)) 
+
+```
+
+#Average movement change before lockdown by state
+```{r}
+pre_lockdown %>% mutate(Avg_Movement = (Grocery + Retail_and_Rec + Workplace + Transit)/4) %>% select(State, Avg_Movement) %>% arrange(Avg_Movement)
+```
+
+#Average movement change during lockdown by state
+```{r}
+lockdown %>% mutate(Avg_Movement = (Grocery + Retail_and_Rec + Workplace + Transit)/4) %>% select(State, Avg_Movement) %>% arrange(Avg_Movement)
+```
+
+#Average movement change after lockdown ended
+```{r}
+post_lockdown %>% mutate(Avg_Movement = (Grocery + Retail_and_Rec + Workplace + Transit)/4) %>% select(State, Avg_Movement) %>% arrange(Avg_Movement)
+```
+
+
+#Movement change by groceries before lockdown
+```{r}
+pre_lockdown_grocery <- pre_lockdown %>% select(State, Grocery) %>% arrange(Grocery)
+pre_lockdown_grocery
+```
+
+#Movement change by groceries during lockdown
+```{r}
+lockdown_grocery <- lockdown %>% select(State, Grocery) %>% arrange(Grocery)
+lockdown_grocery
+```
+
+#Movement change by groceries after lockdown
+```{r}
+post_lockdown_grocery <- post_lockdown %>% select(State, Grocery) %>% arrange(Grocery)
+post_lockdown_grocery
+
+```
+
+#Movement change by recreation before lockdown
+```{r}
+pre_lockdown_recreation <- pre_lockdown %>% select(State, Retail_and_Rec) %>% arrange(Retail_and_Rec)
+pre_lockdown_recreation
+```
+
+#Movement change by recreation during lockdown
+```{r}
+lockdown_recreation <- lockdown %>% select(State, Retail_and_Rec) %>% arrange(Retail_and_Rec)
+lockdown_recreation
+```
+
+#Movement change by recreation after lockdown
+```{r}
+post_lockdown_recreation <- post_lockdown %>% select(State, Retail_and_Rec) %>% arrange(Retail_and_Rec)
+post_lockdown_recreation
+```
+
+#Movement change by workplace before lockdown
+```{r}
+pre_lockdown_workplace <- pre_lockdown %>% select(State, Workplace) %>% arrange(Workplace)
+pre_lockdown_workplace
+```
+
+#Movement change by workplace during lockdown
+```{r}
+lockdown_workplace <- lockdown %>% select(State, Workplace) %>% arrange(Workplace)
+lockdown_workplace
+```
+
+#Movement change by workplace after lockdown
+```{r}
+post_lockdown_workplace <- post_lockdown %>% select(State, Workplace) %>% arrange(Workplace)
+post_lockdown_workplace
+```
+
+#Movement change by transit before lockdown
+```{r}
+#pre_lockdown <- 
+```
+
+#grocery change by division before lockdown
+```{r}
+#pre lockdown data merged with state divisions
+pre_lockdown_div <- inner_join(pre_lockdown, divisions_df, by = c("State" = "state"))
+
+pre_lockdown_grocery <- pre_lockdown_div %>% group_by(division) %>% summarise(Grocery_Change = mean(Grocery)) %>% arrange(Grocery_Change)
+```
+
+#recreation change by division before lockdown
+```{r}
+
+pre_lockdown_recreation <- pre_lockdown_div %>% group_by(division) %>% summarise(Recreation_Change = mean(Retail_and_Rec))
+pre_lockdown_recreation <- pre_lockdown_recreation %>% arrange(Recreation_Change)
+pre_lockdown_recreation
+```
+
+#workplace change by division before lockdown
+```{r}
+pre_lockdown_workplace <- pre_lockdown_div %>% group_by(division) %>% summarise(Workplace_Change = mean(Workplace)) %>% arrange(Workplace_Change)
+pre_lockdown_workplace
+```
+
+#transit change by division before lockdown
+```{r}
+pre_lockdown_transit <- pre_lockdown_div %>% group_by(division) %>% summarise(Transit_Change = mean(Transit)) %>% arrange(Transit_Change)
+pre_lockdown_transit
+```
+
+#Lockdown states: merge states with lifted lockdown and ongoing lockdown 
+```{r}
+#states with only lockdown
+perma_lockdown_2 <- perma_lockdown %>% group_by(State) %>% summarise(Grocery = mean(grocery_and_pharmacy_percent_change_from_baseline),
+                                                                     Retail = mean(retail_and_recreation_percent_change_from_baseline),
+                                                                     Workplace = mean(workplaces_percent_change_from_baseline),
+                                                                     Transit = mean(transit_stations_percent_change_from_baseline))
+
+#merge with divisions
+perma_lockdown_2 <- inner_join(perma_lockdown_2, divisions_df, by = c("State" = "state"))
+lockdown <- inner_join(lockdown, divisions_df, by = c("State" = "state"))
+
+#remove % NA columns from lockdown df
+lockdown <- lockdown %>% select(State, division, Grocery, Retail_and_Rec, Workplace, Transit) %>% rename(Division = division)
+
+#rename perma lockdown columns
+perma_lockdown_2 <- perma_lockdown_2 %>% rename(Division = division, Retail_and_Rec = Retail)
+
+#row bind perma lockdown and temp lockdown states
+lockdown_2 <- bind_rows(lockdown, perma_lockdown_2)
+```
+
+#Grocery change by division during lockdown
+```{r}
+lockdown_2_grocery <- lockdown_2 %>% group_by(Division) %>% summarise(Grocery_Change = mean(Grocery)) %>% arrange(Grocery_Change)
+```
+
+#Retail change by division during lockdown
+```{r}
+lockdown_2_retail <- lockdown_2 %>% group_by(Division) %>% summarise(Retail_Change = mean(Retail_and_Rec)) %>% arrange(Retail_Change)
+lockdown_2_retail
+```
+
+#Workplace change by division during lockdown
+```{r}
+lockdown_2_workplace <- lockdown_2 %>% group_by(Division)%>% summarise(Workplace_Change = mean(Workplace)) %>% arrange(Workplace_Change)
+```
+
+#Transit change by division during lockdown
+```{r}
+lockdown_2_transit <- lockdown_2 %>% group_by(Division) %>% summarise(Transit_Change = mean(Transit)) %>% arrange(Transit_Change)
+```
+
+#Grocery change by division after lockdown
+```{r}
+#Merge division and post lockdown data
+post_lockdown <- inner_join(post_lockdown, divisions_df, by = c("State" = "state"))
+
+post_lockdown_2 <- post_lockdown %>% group_by(division) %>% summarise(Grocery_Change = mean(Grocery),
+                                                                      Retail_Change = mean(Retail_and_Rec, na.rm = TRUE),
+                                                                      Workplace = mean(Workplace),
+                                                                      Transit = mean(Transit))
+
+post_lockdown_grocery <- post_lockdown_2 %>% select(division, Grocery_Change) %>% arrange(Grocery_Change)
+post_lockdown_grocery
+```
+
+#Retail change by division after lockdown
+```{r}
+post_lockdown_recreation <- post_lockdown_2 %>% select(division, Retail_Change) %>% arrange(Retail_Change)
+post_lockdown_recreation <- post_lockdown_recreation %>% rename(Recreation_Change = Retail_Change)
+post_lockdown_recreation 
+```
+
+#Transit change by division after lockdown
+```{r}
+post_lockdown_transit <- post_lockdown_2 %>% select(division, Transit) %>% rename(Transit_Change = Transit) %>% arrange(Transit_Change)
+post_lockdown_transit
+```
+
+#Workplace change by division after lockdown
+```{r}
+post_lockdown_workplace <- post_lockdown_2 %>% select(division, Workplace) %>% rename(Workplace_Change = Workplace) %>% arrange(Workplace_Change)
+post_lockdown_workplace
+
+```
+
+#Merged Grocery Change
+```{r}
+grocery_merged <- left_join(pre_lockdown_grocery, lockdown_2_grocery, by= c("division" = "Division"))
+grocery_merged <- grocery_merged %>% rename(Grocery_Change_Before = Grocery_Change.x, Grocery_Change_During = Grocery_Change.y )
+grocery_merged <- left_join(grocery_merged, post_lockdown_grocery, by = c("division" = "division")) 
+grocery_merged <- grocery_merged %>% rename(Grocery_Change_After = Grocery_Change)
+grocery_merged %>% mutate(During_vs_Before = Grocery_Change_During - Grocery_Change_Before, After_vs_During = Grocery_Change_After - Grocery_Change_During) %>% View()
+grocery_merged %>% write.csv(file = "grocery_merged.csv")
+```
+
+#Merged Recreation Change
+```{r}
+recreation_merged <- left_join(pre_lockdown_recreation , lockdown_2_retail, by = c("division" = "Division")) 
+recreation_merged <- recreation_merged %>% rename(Recreation_Change_Before = Recreation_Change, Recreation_Change_During = Retail_Change)
+recreation_merged <- left_join(recreation_merged, post_lockdown_recreation, by = c("division" = "division")) %>% rename(Recreation_Change_After = Recreation_Change)
+recreation_merged %>% arrange(Recreation_Change_Before)
+recreation_merged %>% arrange(Recreation_Change_During)
+recreation_merged %>% write.csv(file = "recreation_merged.csv")
+```
+
+
+
+#Merged Workplace Change
+```{r}
+merged_workplace <- left_join(pre_lockdown_workplace, lockdown_2_workplace, by = c("division" = "Division"))
+merged_workplace <- merged_workplace %>% rename(Workplace_Change_Before = Workplace_Change.x, Workplace_Change_During = Workplace_Change.y)
+merged_workplace <- left_join(merged_workplace, post_lockdown_workplace, by = c("division" = "division")) %>% rename(Workplace_Change_After = Workplace_Change)
+merged_workplace %>% write.csv(file = "merged_workplace.csv")
+```
+
+#Merged Transit Change
+```{r}
+merged_transit <- left_join(pre_lockdown_transit, lockdown_2_transit, by = c("division" = "Division"))
+merged_transit <- merged_transit %>% rename(Transit_Change_Before = Transit_Change.x, Transit_Change_During = Transit_Change.y)
+merged_transit <- left_join(merged_transit, post_lockdown_transit, by = c("division" = "division")) %>% rename(Transit_Change_After = Transit_Change)
+merged_transit %>% write.csv(file = "merged_transit.csv")
+
+write.csv(residential_df_merged, file = "residential_merged.csv")
+```
+
+#usmap to chart mobility
+
+```{r}
+library(ggplot2)
+library(ggmap)
+library(maps)
+library(mapdata)
+```
+
+1. Residential
+
+
+```{r}
+usa <- map_data("usa")
+
+```
+
