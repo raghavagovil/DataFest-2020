@@ -1,0 +1,121 @@
+---
+title: "mobility_questions"
+author: "Nikhil Sharma"
+date: "5/15/2020"
+output: html_document
+---
+
+```{r}
+library(tidyverse)
+library(questionr)
+library(highcharter)
+options(scipen=999)
+survey <- read_csv("~/Documents/DataFest-2020/CLEANED_SURVEY_64.csv")
+```
+
+```{r}
+survey$F_IDEO_recode <- survey$F_IDEO %>% str_remove_all("Very ")
+```
+
+
+```{r}
+wtd.table(survey$F_IDEO_recode, y = survey$F_CDIVISION, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+
+wtd.table(survey$F_PARTYSUM_FINAL, y = survey$F_CDIVISION, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+```
+
+```{r}
+wtd.table(survey$F_PARTYSUM_FINAL, y = survey$F_AGECAT, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+```
+
+
+# elections
+*************
+How would you rate the job each of the following is doing responding to the coronavirus outbreak? 
+- Donald Trump
+Analysis: In general people think he has performed poorly
+```{r}
+wtd.table(survey$COVIDEGFP_a_W64, y = survey$F_PARTYSUM_FINAL, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVIDEGFP_a_W64, y = survey$F_CDIVISION, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVIDEGFP_a_W64, y = survey$F_IDEO_recode, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+```
+
+80% dems think trump has done fairly or poorly
+
+80% repubs think trump has done good or excellent
+
+There is definite separation amongst the regions
+
+Thinking about some steps that have been announced in some areas to address the coronavirus outbreak, in general do you think each of the
+following have been necessary or unnecessary?
+- Postponing upcoming state primary elections
+Analysis: More democrats want to postpone, Less in west want to postpone, more younger people want to postpone
+```{r}
+wtd.table(survey$COVID_RESTRICTION_g_W64, y = survey$F_PARTYSUM_FINAL, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVID_RESTRICTION_g_W64, y = survey$F_CDIVISION, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVID_RESTRICTION_g_W64, y = survey$F_IDEO_recode, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+```
+
+
+72% of dems think it is necessary to postpone state primaries
+65% of repubs think it is necessary to postpone state primaries
+
+Given the current situation with the coronavirus outbreak, would you feel comfortable or uncomfortable doing each of the following?
+Going to a polling place to vote
+Analysis: More Repubilcans
+```{r}
+wtd.table(survey$COVID_COMFORT_e_W64, y = survey$F_PARTYSUM_FINAL, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVID_COMFORT_e_W64, y = survey$F_CDIVISION, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVID_COMFORT_e_W64, y = survey$F_IDEO_recode, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVID_COMFORT_e_W64, y = survey$F_AGECAT, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+```
+
+70% of democrats are uncomfortable going to polling places
+61% of republicans are uncomfortable with going to polling places
+
+
+
+One spider plot showing %
+
+**************************
+
+# elections end
+
+Given the current situation with the coronavirus outbreak, would you feel comfortable or uncomfortable doing each of the following?
+- Visiting with a close friend or family member at their home
+Analysis: Democrats are less comfortable, young people more comfortable
+```{r}
+wtd.table(survey$F_CDIVISION, y = survey$COVID_COMFORT_a_W64, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2) 
+```
+
+D: I
+R:
+
+Given the current situation with the coronavirus outbreak, would you feel comfortable or uncomfortable doing each of the following?
+- Eating out in a restaurant
+Analysis: More republicans are okay with it, more young people are okay with it
+```{r}
+wtd.table(survey$F_CDIVISION, y = survey$COVID_COMFORT_b_W64, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2) 
+```
+
+Given the current situation with the coronavirus outbreak, would you feel comfortable or uncomfortable doing each of the following?
+- Attending a crowded party
+Analysis: Generally people aren't okay with it
+```{r}
+wtd.table(survey$COVID_COMFORT_c_W64, y = survey$F_CDIVISION, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+```
+
+Given the current situation with the coronavirus outbreak, would you feel comfortable or uncomfortable doing each of the following?
+- Going out to the grocery store
+Analysis: More republicans are okay
+```{r}
+wtd.table(survey$COVID_COMFORT_d_W64, y = survey$F_CDIVISION, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+```
+
+Given the current situation with the coronavirus outbreak, would you feel comfortable or uncomfortable doing each of the following?
+- Going to a polling place to vote
+Analysis: More Repubilcans
+```{r}
+wtd.table(survey$COVID_COMFORT_e_W64, y = survey$F_CDIVISION, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+```
+

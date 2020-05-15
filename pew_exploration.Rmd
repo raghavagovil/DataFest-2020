@@ -8,6 +8,7 @@ output: html_document
 ```{r message = FALSE, warning = FALSE}
 library(tidyverse)
 library(questionr)
+library(highcharter)
 options(scipen=999)
 survey <- read_csv("CLEANED_SURVEY_64.csv")
 #View(survey)
@@ -22,30 +23,16 @@ F_CREGION, F_AGECAT, F_RACETHN, F_PARTYSUM_FINAL, F_INCOME_RECODE
 colnames(survey)
 ```
 
-How closely have you been following news about the outbreak of the coronavirus strain known as COVID-19? - useless
-```{r}
-wtd.table(survey$COVIDFOL_W64, y = survey$F_PARTYSUM_FINAL, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
-wtd.table(survey$COVIDFOL_W64, y = survey$F_CREGION, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
-wtd.table(survey$COVIDFOL_W64, y = survey$F_AGECAT, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
-wtd.table(survey$COVIDFOL_W64, y = survey$F_RACETHN, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
-wtd.table(survey$COVIDFOL_W64, y = survey$F_INCOME_RECODE, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
-```
 
-As a result of the coronavirus outbreak, how has your personal life chnaged? - useless
-```{r}
-wtd.table(survey$COVIDCHG_W64, y = survey$F_PARTYSUM_FINAL, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
-wtd.table(survey$COVIDCHG_W64, y = survey$F_CREGION, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
-wtd.table(survey$COVIDCHG_W64, y = survey$F_AGECAT, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
-wtd.table(survey$COVIDCHG_W64, y = survey$F_RACETHN, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
-wtd.table(survey$COVIDCHG_W64, y = survey$F_INCOME_RECODE, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
-```
+
+
 
 How would you rate the job each of the following is doing responding to the coronavirus outbreak? 
 - Donald Trump
 Analysis: In general people think he has performed poorly
 ```{r}
 wtd.table(survey$COVIDEGFP_a_W64, y = survey$F_PARTYSUM_FINAL, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
-wtd.table(survey$COVIDEGFP_a_W64, y = survey$F_CREGION, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVIDEGFP_a_W64, y = survey$F_CDIVISION, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
 wtd.table(survey$COVIDEGFP_a_W64, y = survey$F_AGECAT, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
 wtd.table(survey$COVIDEGFP_a_W64, y = survey$F_RACETHN, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
 wtd.table(survey$COVIDEGFP_a_W64, y = survey$F_INCOME_RECODE, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
@@ -56,7 +43,7 @@ How would you rate the job each of the following is doing responding to the coro
 Analysis: Netural - pepple are okay with it 
 ```{r}
 wtd.table(survey$COVIDEGFP_b_W64, y = survey$F_PARTYSUM_FINAL, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
-wtd.table(survey$COVIDEGFP_b_W64, y = survey$F_CREGION, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVIDEGFP_b_W64, y = survey$F_CDIVISION, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
 wtd.table(survey$COVIDEGFP_b_W64, y = survey$F_AGECAT, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
 wtd.table(survey$COVIDEGFP_b_W64, y = survey$F_RACETHN, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
 wtd.table(survey$COVIDEGFP_b_W64, y = survey$F_INCOME_RECODE, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
@@ -67,7 +54,7 @@ How would you rate the job each of the following is doing responding to the coro
 Analysis: Same as previous one
 ```{r}
 wtd.table(survey$COVIDEGFP_c_W64, y = survey$F_PARTYSUM_FINAL, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
-wtd.table(survey$COVIDEGFP_c_W64, y = survey$F_CREGION, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVIDEGFP_c_W64, y = survey$F_CDIVISION, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
 wtd.table(survey$COVIDEGFP_c_W64, y = survey$F_AGECAT, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
 wtd.table(survey$COVIDEGFP_c_W64, y = survey$F_RACETHN, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
 wtd.table(survey$COVIDEGFP_c_W64, y = survey$F_INCOME_RECODE, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
@@ -146,7 +133,7 @@ wtd.table(survey$COVIDTHREAT_d_W64, y = survey$F_PARTYSUM_FINAL, weights = surve
 wtd.table(survey$COVIDTHREAT_d_W64, y = survey$F_CREGION, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
 wtd.table(survey$COVIDTHREAT_d_W64, y = survey$F_AGECAT, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
 wtd.table(survey$COVIDTHREAT_d_W64, y = survey$F_RACETHN, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
-wtd.table(survey$COVIDTHREAT_d_W64, y = survey$F_INCOME_RECODE, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVIDTHREAT_d_W64, y = survey$F_INCOME, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
 ```
 
 Now, thinking about how different people and groups are reacting to the coronavirus outbreak, how would you say each of the following is reacting?
@@ -391,7 +378,7 @@ outbreak?
 Analysis: More republicans believe so
 ```{r}
 wtd.table(survey$COVID_HEALTHSYS_a_W64, y = survey$F_PARTYSUM_FINAL, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
-wtd.table(survey$COVID_HEALTHSYS_a_W64, y = survey$F_CREGION, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVID_HEALTHSYS_a_W64, y = survey$F_CDIVISION, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
 wtd.table(survey$COVID_HEALTHSYS_a_W64, y = survey$F_AGECAT, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
 wtd.table(survey$COVID_HEALTHSYS_a_W64, y = survey$F_RACETHN, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
 wtd.table(survey$COVID_HEALTHSYS_a_W64, y = survey$F_INCOME_RECODE, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
@@ -403,7 +390,7 @@ outbreak?
 Analysis: Low confidence across all boards, but more republicans are still more confident
 ```{r}
 wtd.table(survey$COVID_HEALTHSYS_b_W64, y = survey$F_PARTYSUM_FINAL, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
-wtd.table(survey$COVID_HEALTHSYS_b_W64, y = survey$F_CREGION, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$COVID_HEALTHSYS_b_W64, y = survey$F_CDIVISION, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
 wtd.table(survey$COVID_HEALTHSYS_b_W64, y = survey$F_AGECAT, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
 wtd.table(survey$COVID_HEALTHSYS_b_W64, y = survey$F_RACETHN, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
 wtd.table(survey$COVID_HEALTHSYS_b_W64, y = survey$F_INCOME_RECODE, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
@@ -421,11 +408,60 @@ wtd.table(survey$COVID_HEALTHSYS_c_W64, y = survey$F_RACETHN, weights = survey$W
 wtd.table(survey$COVID_HEALTHSYS_c_W64, y = survey$F_INCOME_RECODE, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
 ```
 
-Has a doctor or other healthcare provider EVER told you that you have a mental health condition? - uselesss
+
+
+Have you used social media to share or post information about the coronavirus?
 ```{r}
-wtd.table(survey$COVID_MENTAL_W64, y = survey$F_PARTYSUM_FINAL, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
-wtd.table(survey$COVID_MENTAL_W64, y = survey$F_CREGION, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
-wtd.table(survey$COVID_MENTAL_W64, y = survey$F_AGECAT, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
-wtd.table(survey$COVID_MENTAL_W64, y = survey$F_RACETHN, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
-wtd.table(survey$COVID_MENTAL_W64, y = survey$F_INCOME_RECODE, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(survey$F_CDIVISION, y = survey$F_PARTYSUM_FINAL, weights = survey$WEIGHT_W64) %>% prop.table(margin = 1)
 ```
+
+```{r}
+wtd.table(survey$COVIDTHREAT_d_W64, y = survey$F_INCOME, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+```
+
+
+
+```{r}
+df_income <- wtd.table(survey$COVIDTHREAT_d_W64, y = survey$F_INCOME, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2) %>% as.data.frame() %>% filter (Var1 != "No Response") %>% filter(Var2 != "No Response")
+df_income
+```
+
+```{r}
+df_income$Var2 %>% unique() %>% print()
+```
+
+
+
+
+```{r}
+df_income$Var2 <- factor(df_income$Var2, levels = c("< 10,000", "10,000 - 20,000", "20,000 - 30,000", "30,000 - 40,000", "40,000 - 50,000", "50,000 - 75,000", "75,000 - 100,000", "100,000 - 150,000", ">150,000"))
+```
+
+
+```{r}
+ggplot(df_income, aes(x = Var2, y = Freq, group = Var1, color = Var1)) +
+  geom_line() +
+  ylab("Percentage of Respondents") +
+  ggtitle ("How Much of a Threat is the Coronavirus Outbreak on Your Personal Financial Situation?", subtitle = "n = 11,537; Pew Research Center") +
+  labs (color = "Threat Level") +
+  xlab ("Reported Family Income (USD)") 
+
+
+```
+
+```{r}
+ggplot(df_income, aes(x = Var2, y = Freq, group = Var1, color = Var1)) +
+  geom_point() +
+  geom_line(size = 1) +
+  ylab("Percentage of Respondents") +
+  ggtitle ("How Much of a Threat is the Coronavirus Outbreak on Your Personal Financial Situation?", subtitle = "n = 11,537; Pew Research Center") +
+  labs (color = "Threat Level") +
+  xlab ("Reported Family Income (USD)") +
+  theme_bw()
+```
+
+```{r}
+hchart(df_income, "line", hcaes(x = Var2, y = Freq, group = Var1))
+
+```
+
