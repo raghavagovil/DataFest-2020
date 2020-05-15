@@ -24,11 +24,24 @@ Pacific: 61.27% Democratic
 
 How would you rate the job Donald Trump is doing responding to the coronavirus outbreak? 
 ```{r}
-wtd.table(survey$COVIDEGFP_a_W64, y = survey$F_CDIVISION, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+pacific <- survey %>% filter(F_CDIVISION == "Pacific")
+
+wtd.table(pacific$COVIDEGFP_a_W64, y = pacific$F_PARTYSUM_FINAL, weights = pacific$WEIGHT_W64) %>% prop.table(margin = 2)
+```
+
+```{r}
+esc <- survey %>% filter(F_CDIVISION == "East South Central")
+
+wtd.table(esc$COVIDEGFP_a_W64, y = esc$F_PARTYSUM_FINAL, weights = esc$WEIGHT_W64) %>% prop.table(margin = 2)
 ```
 
 
 Given the current situation with the coronavirus outbreak, would you feel comfortable or uncomfortable going to a polling place to vote?
 ```{r}
-wtd.table(survey$COVID_COMFORT_e_W64, y = survey$F_CDIVISION, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+wtd.table(pacific$COVID_COMFORT_e_W64, y = pacific$F_PARTYSUM_FINAL, weights = pacific$WEIGHT_W64) %>% prop.table(margin = 2)
 ```
+
+```{r}
+wtd.table(esc$COVID_COMFORT_e_W64, y = esc$F_PARTYSUM_FINAL, weights = esc$WEIGHT_W64) %>% prop.table(margin = 2)
+```
+
