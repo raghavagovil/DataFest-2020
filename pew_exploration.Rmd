@@ -8,7 +8,6 @@ output: html_document
 ```{r message = FALSE, warning = FALSE}
 library(tidyverse)
 library(questionr)
-library(highcharter)
 options(scipen=999)
 survey <- read_csv("CLEANED_SURVEY_64.csv")
 #View(survey)
@@ -23,7 +22,10 @@ F_CREGION, F_AGECAT, F_RACETHN, F_PARTYSUM_FINAL, F_INCOME_RECODE
 colnames(survey)
 ```
 
-
+Would you say the coronavirus outbreak is...
+```{r}
+wtd.table(survey$COVID_CRISIS_W64, y = survey$F_PARTYSUM_FINAL, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2) %>% as.data.frame() %>% write.csv("crisis.csv")
+```
 
 
 
@@ -415,10 +417,19 @@ Have you used social media to share or post information about the coronavirus?
 wtd.table(survey$F_CDIVISION, y = survey$F_PARTYSUM_FINAL, weights = survey$WEIGHT_W64) %>% prop.table(margin = 1)
 ```
 
+
+```{r}
+survey$F_INCOME <- factor(survey$F_INCOME, levels = c("< 10,000", "10,000 - 20,000", "20,000 - 30,000", "30,000 - 40,000", "40,000 - 50,000", "50,000 - 75,000", "75,000 - 100,000", "100,000 - 150,000", ">150,000"))
+```
+
+
 ```{r}
 wtd.table(survey$COVIDTHREAT_d_W64, y = survey$F_INCOME, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
 ```
 
+```{r}
+wtd.table(survey$COVIDTHREAT_d_W64, y = survey$F_INCOME_RECODE, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+```
 
 
 ```{r}
@@ -435,6 +446,10 @@ df_income$Var2 %>% unique() %>% print()
 
 ```{r}
 df_income$Var2 <- factor(df_income$Var2, levels = c("< 10,000", "10,000 - 20,000", "20,000 - 30,000", "30,000 - 40,000", "40,000 - 50,000", "50,000 - 75,000", "75,000 - 100,000", "100,000 - 150,000", ">150,000"))
+```
+
+```{r}
+table(df_income$Var1, df_income$Var2)
 ```
 
 
@@ -465,3 +480,18 @@ hchart(df_income, "line", hcaes(x = Var2, y = Freq, group = Var1))
 
 ```
 
+How would you rate the job each of the following is doing responding to the coronavirus outbreak? 
+- Donald Trump
+```{r}
+wtd.table(survey$COVIDEGFP_a_W64, y = survey$F_PARTYSUM_FINAL, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+```
+
+No Response -> Poor -> Fair -> Good -> Excellent
+
+Spider chart
+
+Given the current situation with the coronavirus outbreak, would you feel comfortable or uncomfortable doing each of the following?
+Analysis: More Repubilcans
+```{r}
+wtd.table(survey$COVID_COMFORT_e_W64, y = survey$F_PARTYSUM_FINAL, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+```

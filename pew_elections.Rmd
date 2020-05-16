@@ -28,6 +28,10 @@ wtd.table(survey$F_PARTYSUM_FINAL, y = survey$F_CDIVISION, weights = survey$WEIG
 wtd.table(survey$F_PARTYSUM_FINAL, y = survey$F_AGECAT, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
 ```
 
+```{r}
+wtd.table(survey$F_INCOME_RECODE, y = survey$F_PARTYSUM_FINAL, weights = survey$WEIGHT_W64) %>% prop.table(margin = 2)
+```
+
 
 # elections
 *************
