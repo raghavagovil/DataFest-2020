@@ -11,7 +11,6 @@ knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
 
 ```{r}
 library(data.table)
-setwd("~/Documents/DataFest-2020")
 tweets <- fread("tweets.csv")
 ```
 
@@ -52,36 +51,5 @@ essential <- lapply(c("essential","work","working from home","WFH","essential wo
                       "nurses","employment","insurance","unemployment","jobs","stay at home"), detect) %>% rbindlist()
 # millenials
 millenials <- lapply(c("millenials", "genz", "young", "college", "school"), detect) %>% rbindlist()
-```
-
-
-```{r}
-detect2 <- function(phrase){
-  indices <- lapply(phrase, function(x) stri_detect_fixed(tweets$text, x, case_insensitive =TRUE)) %>% unlist()
-  #row <- c(phrase, tweets[indices, c(4,5,6,7)] %>% colMeans() %>% round(3)) 
-  #df <- indices
-  #colnames(df) <- c("Phrase", "Negative", "Neutral", "Positive", "Compound")
-  return(indices)
-}
-
-
-distribution <- lapply(c("democrat","republican","liberal","conservative","trump","biden","election"), detect)
-```
-
-```{r}
-libs <- detect2("democrat")
-lib_tweets <- tweets[libs,]
-View(lib_tweets)
-```
-
-```{r}
-essential <- tweets[detect2("essential"),]
-View(essential)
-```
-
-
-```{r}
-lib_tweets$neg2 <- lib_tweets$neg * 5
-hist(lib_tweets$neg2)
 ```
 

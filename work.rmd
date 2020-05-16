@@ -1,0 +1,185 @@
+---
+title: "data fest 2020"
+author: ""
+date: "May 12, 2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(gtrendsR)
+library(curl)
+```
+
+```{r}
+df <- gtrendsR::gtrends(
+  keyword = "Coronavirus",
+  geo = "",
+  time = "today+5-y",
+  gprop = c("web", "news", "images", "froogle", "youtube"),
+  category = 0,
+  hl = "en-US",
+  low_search_volume = FALSE,
+  cookie_url = "http://trends.google.com/trends/explore",
+  tz = 0,
+  onlyInterest = FALSE
+)
+```
+
+Let's look at this: `Coronavirus`
+```{r}
+term <- "coronavirus"
+trends <- gtrends(c(term), geo = c("US"),time="today 3-m")
+```
+
+```{r}
+gplot <- function(term) {
+  trends <- gtrends(c(term), geo = c("US"),time="today 3-m")
+  interest <- as.data.frame(trends$interest_by_region)
+  
+  # barplot(
+  #   as.numeric(interest$hits),
+  #   main = term,
+  #   names.arg = interest$location,
+  #   horiz=TRUE,
+  #   las=2,
+  #   cex.names=1)
+  
+  # gimme top 5 worst/best
+  NUM_STATES_TO_CAPTURE <- 5
+  
+  sortedDf <- interest[order(-interest$hits),]
+  highs <- head(sortedDf, NUM_STATES_TO_CAPTURE) #
+  highs$highs <- rep(TRUE, nrow(highs))
+  
+  sortedDf <- interest[order(interest$hits),]
+  lows <- head(sortedDf, NUM_STATES_TO_CAPTURE)
+  lows$highs <- rep(FALSE, nrow(lows))
+  tops <- rbind(highs, lows)
+  return(tops)
+}
+```
+
+```{r}
+library(dplyr)
+```
+
+```{r}
+gplots <- function(terms) {
+  df <- data.frame()
+  for (term in terms) {
+    newDf <- gplot(term)
+    df <- rbind(df, newDf)
+  }
+  highs <- df[df$highs == TRUE,]
+  lows  <- df[df$highs == FALSE,]
+  
+  # capture frequencies of countries being seen
+  # |  country  |  freq  o|
+  freqs <- data.frame(matrix(ncol=2, nrow=0))
+  col_names <- c("state", "frequency")
+  colnames(freqs) <- col_names
+  i = 1
+  states <- c()
+  for (loc in highs$location) {
+    if ((loc %in% states) == FALSE) {
+      freq <- nrow(highs[highs$location == loc,])
+      newRow <- c(loc, freq)
+      freqs[i,1] <- loc
+      freqs[i,2] <- freq
+    }
+    i <- i + 1
+  }
+  print(freqs[order(-freqs$frequency),])
+  
+  ## LOWS ##
+  
+  # |  country  |  freq  |
+  freqs <- data.frame(matrix(ncol=2, nrow=0))
+  col_names <- c("state", "frequency")
+  colnames(freqs) <- col_names
+  i = 1
+  
+  states <- c()
+  for (loc in lows$location) {
+    if ((loc %in% states) == FALSE) {
+      states <- c(states, loc)
+      freq <- nrow(lows[lows$location == loc,])
+      newRow <- c(loc, freq)
+      freqs[i,1] <- loc
+      freqs[i,2] <- freq
+    }
+    i <- i + 1
+  }
+  print(freqs[order(-freqs$frequency),])
+}
+
+```
+
+
+
+
+# Health-related terms
+
+```{r}
+gplots(c("coronavirus","masks","COVID-19", "vaccine", "testing", "quarantine","lockdown"))
+```
+
+# News
+
+```{r}
+gplots(c("united states", "trump", "fake news", "news", "media","hoax"))
+```
+
+# Election
+
+```{r}
+gplots(c("democrat","republican","liberal","conservative","trump","biden","election"))
+```
+
+# Essential Workers
+
+```{r}
+gplots(c("essential","work","working from home","WFH","essential worker","nurses","employment","insurance","unemployment","jobs","stay at home"))
+```
+
+
+```{r}
+gplot("depressed")
+gplot("xenophobia")
+gplot("united states")
+gplot("trump")
+gplot("fake news")
+gplot("news")
+gplot("media")
+gplot("vaccine")
+gplot("work")
+gplot("essential")
+gplot("democrat")
+gplot("republican")
+gplot("liberal")
+gplot("conservative")
+gplot("lockdown")
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

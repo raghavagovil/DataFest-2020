@@ -1,0 +1,101 @@
+---
+title: "GTrends Analysis"
+author: "Raghava Govil"
+date: "5/15/2020"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+```
+
+```{r}
+library(readr)
+news <- read_csv("news.csv")
+health <- read_csv("health.csv")
+election <- read_csv("election.csv")
+essential <- read_csv("essential.csv")
+news <- news[, -1]
+news <- news[-c(19:25), ]
+health <- health[, -1]
+health <- health[-c(19:34), ]
+election <- election[, -1]
+election <- election[-c(18:35), ]
+essential <- essential[, -1]
+essential <- essential[-c(31:53), ]
+```
+
+```{r}
+library(dplyr)
+```
+
+```{r}
+news <- news %>% mutate(division = case_when(state %in% c("Connecticut", "Maine", "Massachusetts", 
+                                                          "New Hampshire", "Rhode Island", "Vermont") ~ "New England", 
+                                             state %in% c("New Jersey", "New York", "Pennsylvania") ~ "Middle Atlantic", 
+                                             state %in% c("Indiana", "Illinois", "Michigan", "Ohio", "Wisconsin") ~ "East North Central",
+                                             state %in% c("Iowa", "Nebraska", "Kansas", "North Dakota", 
+                                                          "Minnesota", "South Dakota", "Missouri") ~ "West North Central",
+                                             state %in% c("Delaware", "District of Columbia", "Florida", 
+                                                          "Georgia", "Maryland", "North Carolina", 
+                                                          "South Carolina", "Virginia", "West Virginia") ~ "South Atlantic", 
+                                             state %in% c("Alabama", "Kentucky", "Mississippi", "Tennessee") ~ "East South Central", 
+                                             state %in% c("Arkansas", "Louisiana", "Oklahoma", "Texas") ~ "West South Central", 
+                                             state %in% c("Arizona", "Colorado", "Idaho", "New Mexico", 
+                                                          "Montana", "Utah", "Nevada", "Wyoming") ~ "Mountain", 
+                                             TRUE ~ "Pacific"))
+
+health <- health %>% mutate(division = case_when(state %in% c("Connecticut", "Maine", "Massachusetts", 
+                                                          "New Hampshire", "Rhode Island", "Vermont") ~ "New England", 
+                                             state %in% c("New Jersey", "New York", "Pennsylvania") ~ "Middle Atlantic", 
+                                             state %in% c("Indiana", "Illinois", "Michigan", "Ohio", "Wisconsin") ~ "East North Central",
+                                             state %in% c("Iowa", "Nebraska", "Kansas", "North Dakota", 
+                                                          "Minnesota", "South Dakota", "Missouri") ~ "West North Central",
+                                             state %in% c("Delaware", "District of Columbia", "Florida", 
+                                                          "Georgia", "Maryland", "North Carolina", 
+                                                          "South Carolina", "Virginia", "West Virginia") ~ "South Atlantic", 
+                                             state %in% c("Alabama", "Kentucky", "Mississippi", "Tennessee") ~ "East South Central", 
+                                             state %in% c("Arkansas", "Louisiana", "Oklahoma", "Texas") ~ "West South Central", 
+                                             state %in% c("Arizona", "Colorado", "Idaho", "New Mexico", 
+                                                          "Montana", "Utah", "Nevada", "Wyoming") ~ "Mountain", 
+                                             TRUE ~ "Pacific"))
+
+election <- election %>% mutate(division = case_when(state %in% c("Connecticut", "Maine", "Massachusetts", 
+                                                          "New Hampshire", "Rhode Island", "Vermont") ~ "New England", 
+                                             state %in% c("New Jersey", "New York", "Pennsylvania") ~ "Middle Atlantic", 
+                                             state %in% c("Indiana", "Illinois", "Michigan", "Ohio", "Wisconsin") ~ "East North Central",
+                                             state %in% c("Iowa", "Nebraska", "Kansas", "North Dakota", 
+                                                          "Minnesota", "South Dakota", "Missouri") ~ "West North Central",
+                                             state %in% c("Delaware", "District of Columbia", "Florida", 
+                                                          "Georgia", "Maryland", "North Carolina", 
+                                                          "South Carolina", "Virginia", "West Virginia") ~ "South Atlantic", 
+                                             state %in% c("Alabama", "Kentucky", "Mississippi", "Tennessee") ~ "East South Central", 
+                                             state %in% c("Arkansas", "Louisiana", "Oklahoma", "Texas") ~ "West South Central", 
+                                             state %in% c("Arizona", "Colorado", "Idaho", "New Mexico", 
+                                                          "Montana", "Utah", "Nevada", "Wyoming") ~ "Mountain", 
+                                             TRUE ~ "Pacific"))
+
+essential <- essential %>% mutate(division = case_when(state %in% c("Connecticut", "Maine", "Massachusetts", 
+                                                          "New Hampshire", "Rhode Island", "Vermont") ~ "New England", 
+                                             state %in% c("New Jersey", "New York", "Pennsylvania") ~ "Middle Atlantic", 
+                                             state %in% c("Indiana", "Illinois", "Michigan", "Ohio", "Wisconsin") ~ "East North Central",
+                                             state %in% c("Iowa", "Nebraska", "Kansas", "North Dakota", 
+                                                          "Minnesota", "South Dakota", "Missouri") ~ "West North Central",
+                                             state %in% c("Delaware", "District of Columbia", "Florida", 
+                                                          "Georgia", "Maryland", "North Carolina", 
+                                                          "South Carolina", "Virginia", "West Virginia") ~ "South Atlantic", 
+                                             state %in% c("Alabama", "Kentucky", "Mississippi", "Tennessee") ~ "East South Central", 
+                                             state %in% c("Arkansas", "Louisiana", "Oklahoma", "Texas") ~ "West South Central", 
+                                             state %in% c("Arizona", "Colorado", "Idaho", "New Mexico", 
+                                                          "Montana", "Utah", "Nevada", "Wyoming") ~ "Mountain", 
+                                             TRUE ~ "Pacific"))
+```
+
+```{r}
+write_csv(news, "news.csv")
+write_csv(health, "health.csv")
+write_csv(election, "election.csv")
+write_csv(essential, "essential.csv")
+```
+
+

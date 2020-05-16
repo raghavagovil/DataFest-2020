@@ -1,0 +1,122 @@
+---
+title: "Spider Chart"
+author: "Raghava Govil"
+date: "5/15/2020"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+```
+
+```{r}
+trump <- data.frame(Excellent = c(5, 45), Poor = c(55, 6), Good = c(15, 36), Fair = c(25, 10))
+rownames(trump) <- c("Democrats", "Republicans")
+trump <- rbind(rep(100, 4), rep(0, 4), trump)
+```
+
+```{r fig.height = 6, fig.width = 8}
+library(fmsb)
+colors_border=c(rgb(0, 0, 0.7, 0.9), rgb(0.7, 0, 0, 0.9))
+colors_in=c(rgb(0, 0, 0.7, 0.5), rgb(0.7, 0, 0, 0.5))
+png("fullpop_spider.png", width = 550)
+radarchart(trump, axistype = 0,
+           pcol = colors_border, pfcol = colors_in, plwd = 3 , plty = 1, 
+           cglcol = "grey", cglty = 1, vlcex = 1.2, vlabels = c("", "", "", ""))
+#legend(x = 0.7, y = 1, legend = rownames(trump[-c(1,2),]), pch = 20 , col = colors_in , text.col = "black", cex = 1.2, pt.cex=3)
+dev.off()
+```
+
+```{r fig.height = 6, fig.width = 8}
+pacific <- data.frame(Excellent = c(3, 42), Poor = c(61, 8), Good = c(12, 36), Fair = c(23, 13))
+rownames(pacific) <- c("Democrats", "Republicans")
+pacific <- rbind(rep(100, 4), rep(0, 4), pacific)
+
+png("pacific_spider.png", width = 550)
+radarchart(pacific, axistype = 0,
+           pcol = colors_border, pfcol = colors_in, plwd = 3 , plty = 1, 
+           cglcol = "grey", cglty = 1, vlcex = 1.2, vlabels = c("", "", "", ""))
+dev.off()
+```
+
+```{r fig.height = 6, fig.width = 8}
+esc <- data.frame(Excellent = c(10, 58), Poor = c(39, 6), Good = c(22, 24), Fair = c(28, 11))
+rownames(esc) <- c("Democrats", "Republicans")
+esc <- rbind(rep(100, 4), rep(0, 4), esc)
+
+png("esc_spider.png", width = 550)
+radarchart(esc, axistype = 0,
+           pcol = colors_border, pfcol = colors_in, plwd = 3 , plty = 1, 
+           cglcol = "grey", cglty = 1, vlcex = 1.2, vlabels = c("", "", "", ""))
+dev.off()
+```
+
+```{r}
+library(highcharter)
+crisis <- read.csv("crisis.csv")
+```
+
+```{r}
+library(ggplot2)
+library(dplyr)
+mpgg <- mpg %>%
+  filter(class %in% c("suv", "compact", "midsize")) %>%
+  group_by(class, manufacturer) %>%
+  summarize(count = n())
+
+categories_grouped <- mpgg %>%
+  group_by(name = class) %>%
+  do(categories = .$manufacturer) %>%
+  list_parse()
+```
+
+```{r}
+crisis_clean <- crisis %>% 
+  filter(Var2 %in% c("Democratic", "Republican"), Var1 %in% c("A Minor Problem", 
+                                                              "A Serious Problem; Not a Crisis", 
+                                                              "A Significant Crisis", 
+                                                              "Not a Problem")) %>% 
+  group_by(Var2, Var1) %>%
+  summarise(rate = sum(round(Freq*100)))
+
+
+
+categories_grouped <- crisis_clean %>% 
+  group_by(name = Var2) %>% 
+  do(categories = .$Var1) %>% 
+  list_parse()
+
+
+hc <- highchart() %>%
+  hc_xAxis(categories = categories_grouped) %>%
+  hc_add_series(data = crisis_clean, type = "bar", hcaes(y = rate, color = Var1),
+                showInLegend = FALSE) %>% 
+  hc_yAxis(max = 100)
+```
+
+
+```{r}
+htmlwidgets::saveWidget(widget = hc, file = "plot.html")
+setwd("/Users/raghavagovil/Desktop/Data Science Projects/DataFest-2020")
+webshot::webshot(url = "plot.html", 
+                 file = "plot.png")
+```
+
+```{r}
+crisis_new <- data.frame(Problem = c("A Minor Problem", 
+                                     "A Serious Problem; Not a Crisis",
+                                     "A Significant Crisis",
+                                     "Not a Problem"),
+                         Democrats = c(2,21,75,1), 
+                         Republicans = c(4,36,58,1))
+
+
+highchart() %>% 
+    hc_chart(type = "column") %>%
+    hc_xAxis(categories = crisis_new$Problem) %>%
+    hc_add_series(name="Democrats",data = crisis_new$Democrats, color = "royalblue") %>%
+  hc_add_series(name="Republicans",data = crisis_new$Republicans, color = "red") %>%
+  hc_add_theme(hc_theme_ft()) %>% 
+  hc_yAxis(max = 100)
+```
+
